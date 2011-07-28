@@ -1,102 +1,101 @@
-function onSpaceStart(MB) {
+function onSpaceStart() {
     mibbuGame.gameData = {};
+	this.initGame();
+	this.generateItems(5);
+	this.initPlayer();
+	
+	mibbuGame.hook(this.gameLoop).hitsOff();
 
     document.onkeypress = this.keyboardManager;
     //document.onkeyup = this.stopBackground;
 }
 
 onSpaceStart.prototype = {
-    init: function() {
+    initGame: function() {
+		mibbuGame.fps().init();
         mibbuGame.gameData.gameHeight = 0;
         mibbuGame.gameData.maxRiseSpeed = 20;
         mibbuGame.gameData.maxFallSpeed = -20;
-
-        mibbuGame.fps().init();
-
-        var rocket = new mibbuGame.spr('img/rocket.png', 196, 218, 2, 1);
-
         mibbuGame.gameData.background = new mibbuGame.bg('img/clouds.png', 6, 90, {x:0,y:0});
+        mibbuGame.gameData.background.speed(0).dir(90).on();
+		mibbuGame.on();
 
+        //create callback for the second sprite
+        //it will change the speed of animation
+        //after every second full animation
+        //hope I explained it clearly:)
+//        items.callback(function(){
+//            speed++;
+//            items.speed(speed);
+//        }, 2);
+    },
+		
+	initPlayer: function() {
+        var rocket = new mibbuGame.spr('img/rocket.png', 196, 218, 2, 1);
         rocket.position(300, 170, 1).speed(0);
         rocket.y = 100;
         rocket.d = 1;
         rocket.type = 0;
 		rocket.moveInterval = 25;
 
-        var speed = 0;
+		for(var i = 0, len = mibbuGame.gameData.items.length; i < len; i++) {
+			console.log('hit check');
+			rocket.hit(mibbuGame.gameData.items[i], function(){
+				/*
+				//change it's type
+				if (rocket.type === 0) {
+					rocket.type = 1;
+					//rocket.change('img/rocket.png', 196, 163, 1, 0);
 
-        mibbuGame.gameData.background.speed(0).dir(90).on();
-        //start main game loop
-        mibbuGame.on();
+				} else {
+					rocket.type = 0;
+					//rocket.change('img/reptile2.png', 200, 200, 7, 0);
+				}
+				//resize it
+				rocket.size(150, 150);
 
-        // called on each frame of main game loop
-        var additionalLoop = function(){
-			var actSpeed = mibbuGame.gameData.background.speed(),
-				actHeight = mibbuGame.gameData.gameHeight;
-
-			actSpeed1 = parseFloat(actSpeed).toFixed(1);
-			actHeight1 = parseFloat(actHeight).toFixed(1);
-			
-            document.getElementById('height').innerHTML = actHeight1;
-            document.getElementById('speed').innerHTML = actSpeed1;
-
-            if(actHeight < 0) {
-                alert('GAME OVER!');
-            }
-
-            if(actHeight > 0) {
-                actSpeed -= 0.2;
-                if(actSpeed < mibbuGame.gameData.maxFallSpeed) {
-                    actSpeed = mibbuGame.gameData.maxFallSpeed;
-                }
-                mibbuGame.gameData.background.speed(actSpeed);
-            }
-
-            if(actSpeed > 0) {
-                actHeight += 0.2;
-            }
-            else if(actSpeed < 0) {
-                actHeight -= 0.2;
-            }
-			
-			mibbuGame.gameData.background.speed(actSpeed);
-			mibbuGame.gameData.gameHeight = actHeight;
-        }
-        //now add that function to the loop
-        //and start checking for the collisions
-        mibbuGame.hook(additionalLoop).hitsOn();
+				//and change direction of it's movement
+				//also - it is not the part of Mibbu
+				rocket.d*=-1;
+				items.d*=-1;*/
+				console.log('HIT!');
+			});
+			mibbuGame.gameData.rocket = rocket;
+		}
+	},
 		
-		/*
-        //if 'rocket' will collide with 'sprite2' then:
-        rocket.hit(sprite2, function(){
-            //change it's type
-            if (rocket.type === 0) {
-                rocket.type = 1;
-                //rocket.change('img/rocket.png', 196, 163, 1, 0);
+	gameLoop: function() {
+		var actSpeed = mibbuGame.gameData.background.speed(),
+			actHeight = mibbuGame.gameData.gameHeight;
 
-            } else {
-                rocket.type = 0;
-                //rocket.change('img/reptile2.png', 200, 200, 7, 0);
-            }
-            //resize it
-            rocket.size(150, 150);
+		actSpeed1 = parseFloat(actSpeed).toFixed(1);
+		actHeight1 = parseFloat(actHeight).toFixed(1);
+			
+		document.getElementById('height').innerHTML = actHeight1;
+		document.getElementById('speed').innerHTML = actSpeed1;
 
-            //and change direction of it's movement
-            //also - it is not the part of Mibbu
-            rocket.d*=-1;
-            sprite2.d*=-1;
-        });
+		if(actHeight < 0) {
+			alert('GAME OVER!');
+		}
 
-        //create callback for the second sprite
-        //it will change the speed of animation
-        //after every second full animation
-        //hope I explained it clearly:)
-        sprite2.callback(function(){
-            speed++;
-            sprite2.speed(speed);
-        }, 2);*/
-        mibbuGame.gameData.rocket = rocket;
-    },
+		if(actHeight > 0) {
+			actSpeed -= 0.2;
+			if(actSpeed < mibbuGame.gameData.maxFallSpeed) {
+				actSpeed = mibbuGame.gameData.maxFallSpeed;
+			}
+			mibbuGame.gameData.background.speed(actSpeed);
+		}
+
+		if(actSpeed > 0) {
+			actHeight += 0.2;
+		}
+		else if(actSpeed < 0) {
+			actHeight -= 0.2;
+		}
+			
+		mibbuGame.gameData.background.speed(actSpeed);
+		mibbuGame.gameData.gameHeight = actHeight;
+	},
 
 	keyboardManager: function(e) {
         //e.preventDefault();
@@ -126,34 +125,11 @@ onSpaceStart.prototype = {
 				break;
 			}
 			case 'a': {
-                //console.log('left');
-				//var pos = rocket.position();
-				//	pos.x -= 15;
-				//	rocket.position(pos.x,pos.y);
 				rocket.position(rocket.position().x -= rocket.moveInterval, rocket.position().y);
-				//console.log(rocket.position());
-				// sprawdzamy i ustawiamy kierunek przesuwania tla
-				//if(rocket.dir != 'E') {
-				//	rocket.dir = 'E';
-				//	background.dir('E');
-				//}
-				// ustawienia dla ruchu w lewo
-				//background.speed(3);
 				break;
 			}
 			case 'd': {
-                //console.log('right');
 				rocket.position(rocket.position().x += rocket.moveInterval, rocket.position().y);
-				// sprawdzamy i ustawiamy kierunek przesuwania tla
-			//	if(rocket.dir != 'W') {
-			//		rocket.dir = 'W';
-			//		background.dir('W');
-			//	}
-				// ustawienia dla ruchu w prawo
-			//	background.speed(3);
-			//	rocket.anim = 0;
-			//	rocket.frame(1);
-			//	rocket.animation(rocket.anim);
 				break;
 			}
 			default: {;}
@@ -162,6 +138,15 @@ onSpaceStart.prototype = {
 		
 	generateItems: function(count) {
 		// generate items
+		var items = [];
+		for(var i = 0; i < count; i++) {
+			items[i] = new mibbuGame.spr('img/star.png', 256, 256, 1, 0);		
+			items[i].size(50,50);
+			items[i].position(Math.random()*800, Math.random()*400, 0).speed(0);
+			
+			//items[i].hit(mibbuGame.gameData.rocket, function(){ console.log('hit'); });
+		}
+		mibbuGame.gameData.items = items;
 	},
 /*
     stopBackground: function() {
