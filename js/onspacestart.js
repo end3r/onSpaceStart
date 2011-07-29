@@ -1,33 +1,21 @@
 function onSpaceStart() {
     mibbuGame.gameData = {};
 	this.initGame();
-	this.generateItems(5);
+	//this.generateItems(5);
 	this.initPlayer();
-	
 	mibbuGame.hook(this.gameLoop).hitsOff();
-
-    document.onkeypress = this.keyboardManager;
-    //document.onkeyup = this.stopBackground;
 }
 
 onSpaceStart.prototype = {
     initGame: function() {
 		mibbuGame.fps().init();
         mibbuGame.gameData.gameHeight = 0;
+        mibbuGame.gameData.addSpeed = 0.5;
         mibbuGame.gameData.maxRiseSpeed = 20;
         mibbuGame.gameData.maxFallSpeed = -20;
         mibbuGame.gameData.background = new mibbuGame.bg('img/clouds.png', 6, 90, {x:0,y:0});
         mibbuGame.gameData.background.speed(0).dir(90).on();
 		mibbuGame.on();
-
-        //create callback for the second sprite
-        //it will change the speed of animation
-        //after every second full animation
-        //hope I explained it clearly:)
-//        items.callback(function(){
-//            speed++;
-//            items.speed(speed);
-//        }, 2);
     },
 		
 	initPlayer: function() {
@@ -36,35 +24,23 @@ onSpaceStart.prototype = {
         rocket.y = 100;
         rocket.d = 1;
         rocket.type = 0;
-		rocket.moveInterval = 25;
+		rocket.moveInterval = 15;
+		rocket.size(98,109);
 
+		if(mibbuGame.gameData.items)
 		for(var i = 0, len = mibbuGame.gameData.items.length; i < len; i++) {
-			console.log('hit check');
+			//console.log('hit check');
 			rocket.hit(mibbuGame.gameData.items[i], function(){
-				/*
-				//change it's type
-				if (rocket.type === 0) {
-					rocket.type = 1;
-					//rocket.change('img/rocket.png', 196, 163, 1, 0);
-
-				} else {
-					rocket.type = 0;
-					//rocket.change('img/reptile2.png', 200, 200, 7, 0);
-				}
-				//resize it
-				rocket.size(150, 150);
-
-				//and change direction of it's movement
-				//also - it is not the part of Mibbu
-				rocket.d*=-1;
-				items.d*=-1;*/
 				console.log('HIT!');
 			});
-			mibbuGame.gameData.rocket = rocket;
 		}
+		mibbuGame.gameData.rocket = rocket;
 	},
 		
 	gameLoop: function() {
+		var input = new gameInput();
+			input.frame();
+		
 		var actSpeed = mibbuGame.gameData.background.speed(),
 			actHeight = mibbuGame.gameData.gameHeight;
 
@@ -96,64 +72,136 @@ onSpaceStart.prototype = {
 		mibbuGame.gameData.background.speed(actSpeed);
 		mibbuGame.gameData.gameHeight = actHeight;
 	},
-
-	keyboardManager: function(e) {
-        //e.preventDefault();
-		var eventObject = window.event ? event : e,
-			unicode = eventObject.charCode ? eventObject.charCode : eventObject.keyCode,
-			actualKey = String.fromCharCode(unicode);
-
-        var rocket = mibbuGame.gameData.rocket;
-        var background = mibbuGame.gameData.background;
-
-		switch(actualKey) {
-			case 'w': {
-                rocket.speed(6);
-				//rocket.frame(1);
-				rocket.animation(1);
-                //background.speed(10);
-                var speed = mibbuGame.gameData.background.speed();
-                speed += 10;
-                if(speed >= mibbuGame.gameData.maxRiseSpeed) {
-                    speed = mibbuGame.gameData.maxRiseSpeed;
-                }
-                mibbuGame.gameData.background.speed(speed);
-				break;
-			}
-			case 's': {
-				// ---
-				break;
-			}
-			case 'a': {
-				rocket.position(rocket.position().x -= rocket.moveInterval, rocket.position().y);
-				break;
-			}
-			case 'd': {
-				rocket.position(rocket.position().x += rocket.moveInterval, rocket.position().y);
-				break;
-			}
-			default: {;}
-		}
-	},
 		
 	generateItems: function(count) {
-		// generate items
 		var items = [];
 		for(var i = 0; i < count; i++) {
 			items[i] = new mibbuGame.spr('img/star.png', 256, 256, 1, 0);		
 			items[i].size(50,50);
 			items[i].position(Math.random()*800, Math.random()*400, 0).speed(0);
-			
 			//items[i].hit(mibbuGame.gameData.rocket, function(){ console.log('hit'); });
 		}
 		mibbuGame.gameData.items = items;
 	},
-/*
-    stopBackground: function() {
-		// zatrzymujemy tlo
-		background.speed(0);
-		rocket.animation(rocket.anim);
-		rocket.frame(0);
-    },
-*/
+
 0:0};
+
+gameConfig = {
+	input: {
+		LEFT: 65,
+		UP: 87,
+		RIGHT: 68,
+		DOWN: 83
+		/* ARROWS instead of WASD:
+		LEFT: 37,
+		UP: 38,
+		RIGHT: 39,
+		DOWN: 40*/
+	}
+};
+
+gameInput = function(){
+    var wrapper = document.getElementById('canvas');
+    wrapper.focus();
+	document.onkeydown = this.keydown.bind(this);
+	document.onkeyup = this.keyup.bind(this);
+	document.onkeypress = function(e){
+	    switch (e.keyCode) {
+			case gameConfig.input.LEFT:
+			case gameConfig.input.UP:
+			case gameConfig.input.RIGHT:
+			case gameConfig.input.DOWN:
+			    return false;
+		}
+	};
+};
+
+gameInput.prototype = {
+	held: {},
+	pressed: {},
+	keydown: function(e) {
+		switch (e.keyCode) {
+			case gameConfig.input.LEFT: {
+				this.pressed.left = true;
+				this.pressed.right = false;
+				this.held.left = true;
+				this.held.right = false;
+				break;
+			}
+			case gameConfig.input.UP: {
+				this.pressed.up = true;
+				this.pressed.down = false;
+				this.held.up = true;
+				this.held.down = false;
+				break;
+			}
+			case gameConfig.input.RIGHT: {
+				this.pressed.right = true;
+				this.pressed.left = false;
+				this.held.right = true;
+				this.held.left = false;
+				break;
+				}
+			case gameConfig.input.DOWN: {
+				this.pressed.down = true;
+				this.pressed.up = false;
+				this.held.down = true;
+				this.held.up = false;
+				break;
+				}
+			default: { return; }
+		}
+		return false;
+	},
+	keyup: function(e) {
+		switch (e.keyCode) {
+			case gameConfig.input.LEFT: {
+				this.held.left = false;
+				break;
+			}
+			case gameConfig.input.UP: {
+				this.held.up = false;
+				break;
+			}
+			case gameConfig.input.RIGHT: {
+				this.held.right = false;
+				break;
+			}
+			case gameConfig.input.DOWN: {
+				this.held.down = false;
+				break;
+			}
+			default: { return; }
+		}
+		return false;
+	},
+	frame: function() {
+        var rocket = mibbuGame.gameData.rocket;
+        var background = mibbuGame.gameData.background;
+		
+		if (!this.pressed.up && !this.held.up) {
+			rocket.speed(0);
+			rocket.animation(0);
+			rocket.frame(0);
+		} if (!this.held.down) {
+			if (this.pressed.left || this.held.left) {
+				rocket.position(rocket.position().x -= rocket.moveInterval, rocket.position().y);
+			} else if (this.pressed.right || this.held.right) {
+				rocket.position(rocket.position().x += rocket.moveInterval, rocket.position().y);
+			}
+			if (this.pressed.up || this.held.up) {
+                if(rocket.speed() != 5) rocket.speed(5);
+				if(rocket.animation() != 1) rocket.animation(1);
+                var speed = mibbuGame.gameData.background.speed();
+                speed += mibbuGame.gameData.addSpeed;
+                if(speed >= mibbuGame.gameData.maxRiseSpeed) {
+                    speed = mibbuGame.gameData.maxRiseSpeed;
+                }
+                mibbuGame.gameData.background.speed(speed);
+			}
+		}
+		this.pressed = {};
+		mibbuGame.gameData.rocket = rocket;
+        mibbuGame.gameData.background = background;
+	}
+};
