@@ -1,48 +1,33 @@
-function onSpaceStart() {
-    mibbuGame.gameData = {};
-	this.initGame();
-	//this.generateItems(5);
-	this.initPlayer();
-	mibbuGame.hook(this.gameLoop).hitsOff();
-}
+var GAME = {};
 
-onSpaceStart.prototype = {
-    initGame: function() {
-		mibbuGame.fps().init();
-        mibbuGame.gameData.gameHeight = 0;
-        mibbuGame.gameData.addSpeed = 0.5;
-        mibbuGame.gameData.maxRiseSpeed = 20;
-        mibbuGame.gameData.maxFallSpeed = -20;
-        mibbuGame.gameData.background = new mibbuGame.bg('img/clouds.png', 6, 90, {x:0,y:0});
-        mibbuGame.gameData.background.speed(0).dir(90).on();
-		mibbuGame.on();
-    },
-		
-	initPlayer: function() {
-        var rocket = new mibbuGame.spr('img/rocket.png', 196, 218, 2, 1);
-        rocket.position(300, 170, 1).speed(0);
-        rocket.y = 100;
-        rocket.d = 1;
-        rocket.type = 0;
-		rocket.moveInterval = 15;
-		rocket.size(98,109);
+GAME.Init = function() {
+	var INPUT = new GAME.Input();
+	document.getElementsByTagName('body')[0].focus();
+	Mibbu.canvasOff().init();
 
-		if(mibbuGame.gameData.items)
-		for(var i = 0, len = mibbuGame.gameData.items.length; i < len; i++) {
-			//console.log('hit check');
-			rocket.hit(mibbuGame.gameData.items[i], function(){
-				console.log('HIT!');
-			});
-		}
-		mibbuGame.gameData.rocket = rocket;
-	},
-		
-	gameLoop: function() {
-		var input = new gameInput();
-			input.frame();
-		
-		var actSpeed = mibbuGame.gameData.background.speed(),
-			actHeight = mibbuGame.gameData.gameHeight;
+	var player = new Mibbu.spr('img/rocket.png', 98, 109, 2, 1),
+		background = new Mibbu.bg('img/clouds.png', 6, 90, {x:0,y:0});
+
+	background.speed(0).dir(90).on();
+	background.width = 800;
+	background.height = 400;
+
+	player.y = 100;
+	player.d = 1;
+	player.type = 0;
+	player.width = 98;
+	player.height = 109;
+	player.position((background.width-player.width)/2, 280, 1).speed(0);
+	
+	var items = GAME.generateItems(5, player);
+
+	Mibbu.on();
+
+	var gameLoop = function(){
+		INPUT.frame(player,background);
+
+		var actSpeed = background.speed(),
+			actHeight = GAME.Config.data.height;
 
 		actSpeed1 = parseFloat(actSpeed).toFixed(1);
 		actHeight1 = parseFloat(actHeight).toFixed(1);
@@ -56,10 +41,10 @@ onSpaceStart.prototype = {
 
 		if(actHeight > 0) {
 			actSpeed -= 0.2;
-			if(actSpeed < mibbuGame.gameData.maxFallSpeed) {
-				actSpeed = mibbuGame.gameData.maxFallSpeed;
+			if(actSpeed < GAME.Config.data.maxFallSpeed) {
+				actSpeed = GAME.Config.data.maxFallSpeed;
 			}
-			mibbuGame.gameData.background.speed(actSpeed);
+			background.speed(actSpeed);
 		}
 
 		if(actSpeed > 0) {
@@ -68,20 +53,27 @@ onSpaceStart.prototype = {
 		else if(actSpeed < 0) {
 			actHeight -= 0.2;
 		}
-			
-		mibbuGame.gameData.background.speed(actSpeed);
-		mibbuGame.gameData.gameHeight = actHeight;
-	},
 		
-	generateItems: function(count) {
-		var items = [];
-		for(var i = 0; i < count; i++) {
-			items[i] = new mibbuGame.spr('img/star.png', 256, 256, 1, 0);		
-			items[i].size(50,50);
-			items[i].position(Math.random()*800, Math.random()*400, 0).speed(0);
-			//items[i].hit(mibbuGame.gameData.rocket, function(){ console.log('hit'); });
-		}
-		mibbuGame.gameData.items = items;
-	},
+		// TODO: for every item (star) add Y to stars' positions so it will be moving like background
+			
+		background.speed(actSpeed);
+		GAME.Config.data.height = actHeight;
+	}
 
-0:0};
+	Mibbu.hook(gameLoop).hitsOn();
+	
+	player.zone(10,10,10,10);
+}
+
+GAME.generateItems = function(count, player) {
+	var items = [];
+	for(var i = 0; i < count; i++) {
+		items[i] = new Mibbu.spr('img/star.png', 25, 25, 1, 0);
+		items[i].position(Math.random()*800, Math.random()*400, 0).speed(0);
+		items[i].hit(player, function(){
+			console.log('hit!');
+			/* TODO: remove the star, add points, generate another one at the top of the page */
+		});
+	}
+	return items;
+};

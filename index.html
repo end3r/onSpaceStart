@@ -5,21 +5,20 @@
 	<title>onSpaceStart</title>
 	<meta name="author" content="end3r" />
 	<link rel="stylesheet" type="text/css" href="css/style.css" />
-	<script type="text/javascript" src="js/lib/mibbu-min.js"></script>
-	<script type="text/javascript" src="js/config.js"></script>
-	<script type="text/javascript" src="js/input.js"></script>
-	<script type="text/javascript" src="js/onspacestart.js"></script>
+	<script src="./js/lib/mibbu-min.js"></script>
+	<script src="./js/onspacestart.js"></script>
+	<script src="./js/config.js"></script>
+	<script src="./js/input.js"></script>
 </head>
-<body>
-<div style="float: left; margin: 10px;">
-    <p>Keys: W, A, D.</p>
+<body style="margin:0">
+<div style="float: right; margin: 10px;">
+    <p>Keys: W, S, A, D.</p>
     <p>Height: <span id="height">0</span>.</p>
     <p>[actual speed: <span id="speed" style="display: inline-block; width: 35px; text-align: right;">0</span>]</p>
 </div>
-	<div id="canvas"></div>
-<script>
-    var mibbuGame = new mibbu(800, 400, 'canvas');
-    new onSpaceStart();
-</script>
+	<script>
+		var Mibbu = new mibbu(800, 400);
+		GAME.Init();
+	</script>
 </body>
 </html>

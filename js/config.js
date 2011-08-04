@@ -1,13 +1,15 @@
-gameConfig = {
+GAME.Config = {
 	input: {
-		LEFT: 65,
-		UP: 87,
-		RIGHT: 68,
-		DOWN: 83
-		/* ARROWS instead of WASD:
 		LEFT: 37,
 		UP: 38,
 		RIGHT: 39,
-		DOWN: 40*/
+		DOWN: 40
+	},
+	data: {
+		height: 0,
+        thrust: 0.5,
+        maxRiseSpeed: 20,
+        maxFallSpeed: -20,
+        moveInterval: 12
 	}
 };
