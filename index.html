@@ -10,17 +10,14 @@
 	<script src="./js/config.js"></script>
 	<script src="./js/input.js"></script>
 </head>
-<body style="margin:0">
-<div style="float: right; margin: 10px;">
-    <p>Keys: Arrows.</p>
-    <p>Height: <span id="height">0</span>.</p>
-    <p>[actual speed: <span id="speed" style="display: inline-block; width: 35px; text-align: right;">0</span>]</p>
-	<p>---</p>
-	<p><b>AVOID THE STARS!</b></p>
-</div>
+<body>
+<div id="gameArea">
+	<div id="container"></div>
+	<div id="statbar">Height: <span id="height">0</span>. Speed: <span id="speed">0</span>.</div>
 	<script>
-		var Mibbu = new mibbu(800, 400);
+		var Mibbu = new mibbu(800, 400, 'container');
 		GAME.Init();
 	</script>
+</div>
 </body>
 </html>

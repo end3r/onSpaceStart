@@ -101,16 +101,16 @@ GAME.Input.prototype = {
 		}
 		else if(this.pressed.down || this.held.down) {
 			player.position(player.position().x, player.position().y += 2);
-			if(player.position().y > 280)
-				player.position(player.position().x, 280);
+			if(player.position().y > player.startY)
+				player.position(player.position().x, player.startY);
 		}
 		else {
 			player.speed(0);
 			player.animation(0);
 			player.frame(0);
 			player.position(player.position().x, player.position().y += 1);
-			if(player.position().y > 280)
-				player.position(player.position().x, 280);
+			if(player.position().y > player.startY)
+				player.position(player.position().x, player.startY);
 		}
 		this.pressed = {};
 	}
