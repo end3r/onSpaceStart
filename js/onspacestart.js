@@ -37,7 +37,7 @@ GAME.Init = function() {
 	var itemCount = 5, items = [];
 	for(var i = 0; i < itemCount; i++) {
 		items[i] = new Mibbu.spr('img/star.png', 25, 25, 1, 0);
-		items[i].position(Math.random()*background.width, Math.random()*background.height, 0).speed(0);
+		items[i].position(Math.random()*background.width, (Math.random()*background.height)-background.height, 0).speed(0);
 		items[i].hit(player, function() { GAME.gameOver('star'); });
 		items[i].movement = 0;
 		// TODO: try to generate the star(s) again when it hits the player (is placed ON him) before he starts the game
@@ -113,7 +113,7 @@ GAME.Init = function() {
 
 		for(var i = 0; i < itemCount; i++) {
 			var difficultyLevel = 0;
-			if(actHeight > 50) {
+			if(actHeight > 200) {
 				if(items[i].movement == 0) {
 					var diff = (~~(Math.random()*2))+1;
 					if(diff == 2) items[i].movement = 1;
@@ -146,9 +146,6 @@ GAME.Init = function() {
 	
 	player.zone(30,10,30,10);
 	bird.zone(10,10,10,10);
-	
-	var msg = 'Fly as high as You can using keyboard arrows. And remember to avoid the stars and other flying shit!';
-	console.log(msg);
 }
 
 GAME.gameOver = function(what) {

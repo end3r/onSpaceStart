@@ -2,5 +2,7 @@
 #gameArea { width: 800px; margin: 0 auto; position: relative; }
 #container { position: absolute; top: 0; left: 0; z-index: 1; }
 #statbar { border: 1px solid #666; position: absolute; top: 0; right: 0; z-index: 2; border-radius: 0 0 0 5px; padding: 5px 10px; }
-#statbar #height { display: inline-block; width: 30px; text-align: right; }
+#statbar #height { display: inline-block; width: 35px; text-align: right; }
 #statbar #speed { display: inline-block; width: 35px; text-align: right; }
+
+#tmp { position: absolute; top: 0; right: 0; width: 200px; border: 1px solid red; }
