@@ -43,7 +43,7 @@ GAME.Init = function() {
 		document.getElementById('speed').innerHTML = actSpeed1;
 
 		if(actHeight < 0) {
-			alert('GAME OVER!');
+			alert("GAME OVER! Oh noes, You crashed your spaceship!");
 		}
 
 		if(actHeight > 0) {
@@ -82,4 +82,7 @@ GAME.Init = function() {
 	player.zone(30,10,30,10);
 }
 
-GAME.gameOver = function(id) { alert('GAME OVER! ;('); }
+GAME.gameOver = function(id) {
+	var score = parseFloat(GAME.Config.data.height).toFixed(1)
+	alert("GAME OVER! Congratz, you've scored "+score+" metres!");
+}
