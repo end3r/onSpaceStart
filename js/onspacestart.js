@@ -1,8 +1,19 @@
 var GAME = {};
 
+GAME.Menu = function(id) {
+	document.getElementById(id).style.zIndex = '20';
+	//howTo: function() { document.getElementById('howTo').style.zIndex = '20'; },
+	//about: function() { document.getElementById('about').style.zIndex = '20'; }
+};
+
 GAME.Init = function() {
+	window.focus();
+	var menu = document.getElementById('menu');
+	menu.getElementsByTagName('h1')[0].onclick = function() { GAME.Menu('game'); };
+	menu.getElementsByTagName('h2')[0].onclick = function() { GAME.Menu.howTo(); };
+	menu.getElementsByTagName('h3')[0].onclick = function() { GAME.Menu.about(); };
+	
 	var INPUT = new GAME.Input();
-	document.getElementsByTagName('body')[0].focus();
 	Mibbu.fps().canvasOff().init();
 
 	var player = new Mibbu.spr('img/rocket.png', 98, 109, 2, 1),
@@ -37,7 +48,7 @@ GAME.Init = function() {
 	var itemCount = 5, items = [];
 	for(var i = 0; i < itemCount; i++) {
 		items[i] = new Mibbu.spr('img/star.png', 25, 25, 1, 0);
-		items[i].position(Math.random()*background.width, (Math.random()*background.height)-background.height, 0).speed(0);
+		items[i].position(Math.random()*background.width, (Math.random()*background.height)-background.height-25, 0).speed(0);
 		items[i].hit(player, function() { GAME.gameOver('star'); });
 		items[i].movement = 0;
 		// TODO: try to generate the star(s) again when it hits the player (is placed ON him) before he starts the game

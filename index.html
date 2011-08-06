@@ -11,11 +11,25 @@
 	<script src="./js/input.js"></script>
 </head>
 <body>
-<div id="gameArea">
-	<div id="container"></div>
-	<div id="statbar">Height: <span id="height">0</span>. Speed: <span id="speed">0</span>.</div>
+<div id="container">
+	<div id="game"></div>
+	<p id="statbar">Height: <span id="height">0</span>. Speed: <span id="speed">0</span>.</p>
+	<div id="menu">
+		<h1>ST<span>A</span>RT</h1>
+		<p>the game</p>
+		<h2>H<span>O</span>W</h2>
+		<p>to play</p>
+		<h3>AB<span>O</span>UT</h3>
+		<p>the game</p>
+	</div>
+	<div id="howTo">
+		<p>How to play - screen with drawings explaining everything.</p>
+	</div>
+	<div id="about">
+		<p>[about]</p>
+	</div>
 	<script>
-		var Mibbu = new mibbu(800, 400, 'container');
+		var Mibbu = new mibbu(800, 400, 'game');
 		GAME.Init();
 	</script>
 </div>

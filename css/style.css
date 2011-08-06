@@ -1,8 +1,22 @@
 * { margin:  0; padding: 0; }
-#gameArea { width: 800px; margin: 0 auto; position: relative; }
-#container { position: absolute; top: 0; left: 0; z-index: 1; }
-#statbar { border: 1px solid #666; position: absolute; top: 0; right: 0; z-index: 2; border-radius: 0 0 0 5px; padding: 5px 10px; }
-#statbar #height { display: inline-block; width: 35px; text-align: right; }
-#statbar #speed { display: inline-block; width: 35px; text-align: right; }
+#container { width: 800px; margin: 0 auto; position: relative; }
+#container > div { position: absolute; top: 0; left: 0; width: 800px; height: 400px; }
+#container #game { z-index: 2; }
+p#statbar { border: 1px solid #666; position: absolute; top: 0; right: 0; z-index: 3; border-radius: 0 0 0 5px; padding: 5px 10px; }
+p#statbar #height { display: inline-block; width: 35px; text-align: right; }
+p#statbar #speed { display: inline-block; width: 35px; text-align: right; }
 
-#tmp { position: absolute; top: 0; right: 0; width: 200px; border: 1px solid red; }
+#tmp { position: absolute; top: 0; right: 0; width: 200px; border: 1px solid red; display: none; }
+
+#container #menu { background: #E0D9CF; color: #666; text-align: center; text-shadow: 1px 1px 1px #fff; /*display: block;*/ z-index: 10;
+/*background-image: -moz-radial-gradient(center 45deg, circle farthest-side, #fff 0%, #E0D9CF 100%);*/
+}
+#menu h1, #menu h2, #menu h3 { cursor: pointer; border-bottom: 1px solid #39C6F4; display: inline-block; }
+#menu span { color: #39C6F4; }
+#menu p { color: #888; }
+#menu h1 { margin-top: 80px; }
+#menu h2 { margin-top: 30px; }
+#menu h3 { margin-top: 30px; }
+
+#howTo { background: #E0D9CF; color: #666; text-align: center; text-shadow: 1px 1px 1px #fff; z-index: 9; }
+#about { background: #E0D9CF; color: #666; text-align: center; text-shadow: 1px 1px 1px #fff; z-index: 8; }
