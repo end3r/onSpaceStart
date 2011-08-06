@@ -2,6 +2,7 @@ var GAME = {};
 
 GAME.Menu = function(id) {
 	document.getElementById(id).style.zIndex = '20';
+	document.getElementById('statbar').style.zIndex = '21';
 	//howTo: function() { document.getElementById('howTo').style.zIndex = '20'; },
 	//about: function() { document.getElementById('about').style.zIndex = '20'; }
 };
@@ -9,14 +10,16 @@ GAME.Menu = function(id) {
 GAME.Init = function() {
 	window.focus();
 	var menu = document.getElementById('menu');
+	// tmp
 	menu.getElementsByTagName('h1')[0].onclick = function() { GAME.Menu('game'); };
 	menu.getElementsByTagName('h2')[0].onclick = function() { GAME.Menu.howTo(); };
 	menu.getElementsByTagName('h3')[0].onclick = function() { GAME.Menu.about(); };
 	
 	var INPUT = new GAME.Input();
 	Mibbu.fps().canvasOff().init();
+	GAME.Config.data.active = true;
 
-	var player = new Mibbu.spr('img/rocket.png', 98, 109, 2, 1),
+	var player = new Mibbu.spr('img/rocket.png', 70, 78, 2, 1),
 		bird = new Mibbu.spr('img/bird.png', 50, 34, 0, 0),
 		planet = new Mibbu.spr('img/planet.png', 142, 78, 0, 0),
 		background = new Mibbu.bg('img/clouds.png', 6, 90, {x:0,y:0});
@@ -27,23 +30,17 @@ GAME.Init = function() {
 	bird.width = 50;
 	bird.height = 34;
 	bird.hit(player, function() { GAME.gameOver('bird'); });
-
-	planet.position(315,355);
 	
 	background.speed(0).dir(90).on();
 	background.width = 800;
 	background.height = 400;
 
-	player.y = 100;
-	player.d = 1;
-	player.type = 0;
-	player.width = 98;
-	player.height = 109;
-	player.startX = ~~((background.width-player.width)/2);
-	player.startY = 300;
-	player.position(player.startX, player.startY, 1).speed(0);
-	// tmp:
-	player.size(69,75);
+	planet.width = 142;
+	planet.position(~~((background.width-planet.width)/2),355);
+
+	player.width = 70;
+	player.height = 78;
+	player.position(~~((background.width-player.width)/2), GAME.Config.data.posLimitBottom, 1).speed(0);
 	
 	var itemCount = 5, items = [];
 	for(var i = 0; i < itemCount; i++) {
@@ -157,27 +154,4 @@ GAME.Init = function() {
 	
 	player.zone(30,10,30,10);
 	bird.zone(10,10,10,10);
-}
-
-GAME.gameOver = function(what) {
-	var msg = '', score = parseFloat(GAME.Config.data.height).toFixed(1),
-		defaultMsg = "Congratz, you've scored "+score+" metres!";
-	switch(what) {
-		case 'star': {
-			msg = "GAME OVER! You hit the star! "+defaultMsg;
-			break;
-		}
-		case 'crash': {
-			msg = "GAME OVER! Oh noes, You crashed your spaceship!";
-			break;
-		}
-		case 'bird': {
-			msg = "GAME OVER! You killed that poor bird! "+defaultMsg;
-			break;
-		}
-		default: {
-			msg = defaultMsg;
-		}
-	}
-	alert(msg);
-}
+};
