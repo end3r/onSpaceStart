@@ -1,28 +1,52 @@
+"use strict";
 var GAME = {};
 
-GAME.Menu = function(id) {
-	document.getElementById(id).style.zIndex = '20';
-	document.getElementById('statbar').style.zIndex = '21';
-	//howTo: function() { document.getElementById('howTo').style.zIndex = '20'; },
-	//about: function() { document.getElementById('about').style.zIndex = '20'; }
+GAME.Init = function() {
+	Mibbu.fps().canvasOff().init();
+	var preload = {};
+	preload.player = new Mibbu.spr('img/rocket.png', 70, 78, 2, 1),
+	preload.bird = new Mibbu.spr('img/bird.png', 50, 34, 0, 0),
+	preload.planet = new Mibbu.spr('img/planet.png', 142, 78, 0, 0),
+	preload.bg = new Mibbu.spr('img/clouds2.png', 1, 1, 0, 0), // preload second background
+	preload.background = new Mibbu.bg('img/clouds.png', 6, 90, {x:0,y:-1600});
+
+	var menu = document.getElementById('menu');
+	menu.getElementsByTagName('h1')[0].onclick = function() { GAME.Menu('game', preload); };
+	menu.getElementsByTagName('h2')[0].onclick = function() { GAME.Menu('instr'); };
+	menu.getElementsByTagName('h3')[0].onclick = function() { GAME.Menu('about'); };
 };
 
-GAME.Init = function() {
-	window.focus();
-	var menu = document.getElementById('menu');
-	// tmp
-	menu.getElementsByTagName('h1')[0].onclick = function() { GAME.Menu('game'); };
-	menu.getElementsByTagName('h2')[0].onclick = function() { GAME.Menu.howTo(); };
-	menu.getElementsByTagName('h3')[0].onclick = function() { GAME.Menu.about(); };
-	
-	var INPUT = new GAME.Input();
-	Mibbu.fps().canvasOff().init();
-	GAME.Config.data.active = true;
+GAME.Menu = function(id, preload) {
+	switch(id) {
+		case 'game': {
+			document.getElementById('game').style.zIndex = '20';
+			document.getElementById('statbar').style.zIndex = '21';
+			GAME.Start(preload);
+			break;
+		}
+		case 'instr': {
+			document.getElementById('howTo').style.zIndex = '20';
+			break;
+		}
+		case 'about': {
+			document.getElementById('about').style.zIndex = '20';
+			break;
+		}
+		default: {;}
+	}
+};
 
-	var player = new Mibbu.spr('img/rocket.png', 70, 78, 2, 1),
-		bird = new Mibbu.spr('img/bird.png', 50, 34, 0, 0),
-		planet = new Mibbu.spr('img/planet.png', 142, 78, 0, 0),
-		background = new Mibbu.bg('img/clouds.png', 6, 90, {x:0,y:0});
+GAME.Start = function(preload) {
+	window.focus();
+	var INPUT = new GAME.Input(),
+		player = preload.player,
+		bird = preload.bird,
+		planet = preload.planet,
+		background = preload.background;
+		
+	var firstBg = true;
+
+	//tmpBG.position(0,0);
 
 	// TODO: animatable version of the bird, both directions
 	bird.position(-60,-60);
@@ -36,7 +60,8 @@ GAME.Init = function() {
 	background.height = 400;
 
 	planet.width = 142;
-	planet.position(~~((background.width-planet.width)/2),355);
+	planet.height = 78;
+	planet.position(~~((background.width-planet.width)/2),background.height-planet.height+35);
 
 	player.width = 70;
 	player.height = 78;
@@ -52,6 +77,7 @@ GAME.Init = function() {
 	}
 	GAME.Config.birdActive = false;
 	
+	GAME.Config.data.active = true;
 	Mibbu.on();
 
 	var gameLoop = function(){
@@ -60,11 +86,8 @@ GAME.Init = function() {
 		var actSpeed = background.speed(),
 			actHeight = GAME.Config.data.height;
 
-		actSpeed1 = parseFloat(actSpeed).toFixed(1);
-		actHeight1 = parseFloat(actHeight).toFixed(1);
-			
-		document.getElementById('height').innerHTML = actHeight1;
-		document.getElementById('speed').innerHTML = actSpeed1;
+		document.getElementById('height').innerHTML = parseFloat(actHeight).toFixed(1);
+		document.getElementById('speed').innerHTML = parseFloat(actSpeed).toFixed(1);
 
 		if(actHeight < 0) {
 			GAME.gameOver('crash');
@@ -133,7 +156,7 @@ GAME.Init = function() {
 			// TODO: when falling, generate again the stars that will disapear at the top of the page - show them randomly at the bottom
 			// yeah, I hope players don't notice the different positions of once overtaken stars
 			if(items[i].position().y > background.height) {
-				newItem = new Mibbu.spr('img/star.png', 25, 25, 1, 0);
+				var newItem = new Mibbu.spr('img/star.png', 25, 25, 1, 0);
 				newItem.position(Math.random()*background.width, -25, 0).speed(0); // -25 * random, so the pos is something between -25 and -75 ?
 				newItem.hit(player, function() { GAME.gameOver(); });
 				newItem.movement = 0;
@@ -145,7 +168,26 @@ GAME.Init = function() {
 		}
 		
 		// TODO: change stars to something else, like balloons etc, add (generate) flying birds from given height
-	
+
+		if(actHeight > 100 && firstBg) {
+			firstBg = false;
+			console.log('bg: '+background.img());
+			background.img('img/clouds2.png');
+		}
+
+/*	
+		if(actHeight > 20 && firstBg) {
+			firstBg = false;
+			background.off();
+			console.log('new background');
+			var oldBackground = background;
+			background = new Mibbu.bg('img/clouds2.png', 6, 90, {x:0,y:0});
+			background.on();
+			//background.speed(actSpeed).dir(90).on();
+			background.width = 800;
+			background.height = 400;
+		}
+*/		
 		background.speed(actSpeed);
 		GAME.Config.data.height = actHeight;
 	}

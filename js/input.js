@@ -49,7 +49,7 @@ GAME.Input.prototype = {
 			case GAME.Config.input.PAUSE: {
 				if(GAME.Config.data.active) {
 					GAME.Config.data.active = false;
-					GAME.Alert('PAUSED','Press [space] again to get back to the game.');
+					GAME.Alert('PAUSED','Press [spacebar] again to get back to the game.');
 					Mibbu.off();
 				} else {
 					GAME.Config.data.active = true;

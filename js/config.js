@@ -4,7 +4,6 @@ GAME.Config = {
 		UP: 38,
 		RIGHT: 39,
 		DOWN: 40,
-		/*PAUSE: 80,*/
 		PAUSE: 32
 	},
 	data: {

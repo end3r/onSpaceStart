@@ -1,4 +1,4 @@
-GAME.Alert = function(title,message) {
+GAME.Alert = function(title, message) {
 	var div = document.getElementById('message');
 	if(title) { // show
 		div.style.zIndex = '20';
