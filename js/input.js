@@ -8,6 +8,7 @@ GAME.Input = function(){
 			case GAME.Config.input.RIGHT:
 			case GAME.Config.input.DOWN:
 			case GAME.Config.input.PAUSE:
+			case GAME.Config.input.START:
 			    return false;
 		}
 	};
@@ -47,15 +48,20 @@ GAME.Input.prototype = {
 				break;
 			}
 			case GAME.Config.input.PAUSE: {
-				if(GAME.Config.data.active) {
-					GAME.Config.data.active = false;
-					GAME.Alert('PAUSED','Press [spacebar] again to get back to the game.');
+				if(GAME.Config.active) {
+					GAME.Config.active = false;
+					GAME.Utils.Alert('PAUSED','Press [spacebar] again to get back to the game.');
 					Mibbu.off();
 				} else {
-					GAME.Config.data.active = true;
-					GAME.Alert();
+					GAME.Config.active = true;
+					GAME.Utils.Alert();
 					Mibbu.on();
 				}
+				break;
+			}
+			case GAME.Config.input.START: {
+				if(!GAME.Config.active)
+					document.getElementById('menu').getElementsByTagName('h1')[0].onclick();
 				break;
 			}
 			default: { return; }
@@ -86,16 +92,16 @@ GAME.Input.prototype = {
 	},
 	frame: function(player,background) {
 		// TODO: reset held/pressed keys when lost focus OR pause game
-		if (GAME.Config.data.height) {
+		if (GAME.Config.height) {
 			if ( (this.pressed.left || this.held.left)) {
-				player.position(player.position().x -= GAME.Config.data.moveInterval, player.position().y);
-				if(player.position().x < 0) {
-					player.position(0, player.position().y);
+				player.position(player.position().x -= GAME.Config.moveInterval, player.position().y);
+				if(player.position().x <= 0) {
+					player.position(1, player.position().y);
 				}
 			} else if (this.pressed.right || this.held.right) {
-				player.position(player.position().x += GAME.Config.data.moveInterval, player.position().y);
-				if(player.position().x > background.width-player.width) {
-					player.position(background.width-player.width, player.position().y);
+				player.position(player.position().x += GAME.Config.moveInterval, player.position().y);
+				if(player.position().x > background.width-player.width-1) {
+					player.position(background.width-player.width-1, player.position().y);
 				}
 			}
 		}
@@ -103,27 +109,27 @@ GAME.Input.prototype = {
 			player.speed(5);
 			player.animation(1);
 			var speed = background.speed();
-			speed += GAME.Config.data.thrust;
-			if(speed >= GAME.Config.data.maxRiseSpeed) {
-				speed = GAME.Config.data.maxRiseSpeed;
+			speed += GAME.Config.thrust;
+			if(speed >= GAME.Config.maxRiseSpeed) {
+				speed = GAME.Config.maxRiseSpeed;
 			}
 			background.speed(speed);
-			player.position(player.position().x, player.position().y -= GAME.Config.data.playerRise);
-			if(player.position().y < GAME.Config.data.posLimitTop)
-				player.position(player.position().x, GAME.Config.data.posLimitTop);
+			player.position(player.position().x, player.position().y -= GAME.Config.playerRise);
+			if(player.position().y < GAME.Config.posLimitTop)
+				player.position(player.position().x, GAME.Config.posLimitTop);
 		}
 		else if(this.pressed.down || this.held.down) {
-			player.position(player.position().x, player.position().y += GAME.Config.data.playerFall);
-			if(player.position().y > GAME.Config.data.posLimitBottom)
-				player.position(player.position().x, GAME.Config.data.posLimitBottom);
+			player.position(player.position().x, player.position().y += GAME.Config.playerFall);
+			if(player.position().y > GAME.Config.posLimitBottom)
+				player.position(player.position().x, GAME.Config.posLimitBottom);
 		}
 		else {
 			player.speed(0);
 			player.animation(0);
 			player.frame(0);
-			player.position(player.position().x, player.position().y += GAME.Config.data.playerRise);
-			if(player.position().y > GAME.Config.data.posLimitBottom)
-				player.position(player.position().x, GAME.Config.data.posLimitBottom);
+			player.position(player.position().x, player.position().y += GAME.Config.playerRise);
+			if(player.position().y > GAME.Config.posLimitBottom)
+				player.position(player.position().x, GAME.Config.posLimitBottom);
 		}
 		this.pressed = {};
 	}

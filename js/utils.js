@@ -1,4 +1,6 @@
-GAME.Alert = function(title, message) {
+GAME.Utils = {};
+
+GAME.Utils.Alert = function(title, message) {
 	var div = document.getElementById('message');
 	if(title) { // show
 		div.style.zIndex = '20';
@@ -9,14 +11,14 @@ GAME.Alert = function(title, message) {
 	}
 };
 
-GAME.gameOver = function(what) {
+GAME.Utils.GameOver = function(what) {
 	var msg = '',
-		score = parseFloat(GAME.Config.data.height).toFixed(1),
+		score = parseFloat(GAME.Config.height).toFixed(1),
 		defaultMsg = "Congratz, you've scored "+score+" metres!";
 
 	switch(what) {
-		case 'star': {
-			msg = "You hit the star! "+defaultMsg;
+		case 'item': {
+			msg = "You hit the balloon! "+defaultMsg;
 			break;
 		}
 		case 'crash': {
@@ -32,5 +34,14 @@ GAME.gameOver = function(what) {
 		}
 	}
 	Mibbu.off();
-	GAME.Alert('GAME OVER!', msg);
+	GAME.Utils.Alert('GAME OVER!', msg+' <a href="">Try again?</a>');
+};
+
+GAME.Utils.NewItem = function(posX, posY, animation) {
+	var newItem = new Mibbu.spr('img/balloons.png', 30, 80, 0, 4);
+	newItem.position(posX, posY, 2).speed(1);
+	newItem.movement = 0;
+	newItem.zone(0,0,43,0);
+	newItem.animation(animation);
+	return newItem;
 };
