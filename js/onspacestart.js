@@ -5,7 +5,7 @@ GAME.Init = function() {
 	Mibbu.fps().canvasOff().init();
 	var preload = {};
 	preload.player = new Mibbu.spr('img/rocket.png', 70, 78, 2, 1),
-	preload.bird = new Mibbu.spr('img/bird.png', 50, 34, 0, 0),
+	preload.bird = new Mibbu.spr('img/bird.png', 43, 35, 2, 1),
 	//preload.plane = new Mibbu.spr('img/plane.png', 50, 34, 0, 0),
 	preload.planet = new Mibbu.spr('img/earth.png', 800, 144, 0, 0),
 	preload.background = new Mibbu.bg('img/bg_clouds.png', 6, 90, {x:0,y:-600}), // start from the bottom
@@ -50,14 +50,13 @@ GAME.Start = function(preload) {
 		background = preload.background,
 		item_height = 80;
 
-	// TODO: animatable version of the bird, both directions
-	// TODO: fix movement
-	bird.width = 50;
-	bird.height = 34;
+	bird.width = 43;
+	bird.height = 35;
 	bird.flyingSpeed = 7;
 	bird.position(-bird.width,-bird.height, 4);
 	bird.hit(player, function() { GAME.Utils.GameOver('bird'); });
-	bird.zone(10,10,10,10);
+	bird.zone(5,5,5,5);
+	bird.speed(3);
 
 //	plane.width = 50;
 //	plane.height = 34;
@@ -103,6 +102,8 @@ GAME.Start = function(preload) {
 			GAME.Config.birdActive = true;
 			bird.direction = GAME.Utils.PlusMinus();
 			var posX = (bird.direction+1) ? -bird.width : background.width;
+			var anim = (bird.direction+1) ? 0 : 1;
+			bird.animation(anim);
 			bird.position(posX, 1);
 		}
 
