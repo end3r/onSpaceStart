@@ -56,6 +56,8 @@ GAME.Input.prototype = {
 					GAME.Config.active = true;
 					GAME.Utils.Alert();
 					Mibbu.on();
+				//	GAME.keyboard.held = {};
+				//	GAME.keyboard.pressed = {};
 				}
 				break;
 			}

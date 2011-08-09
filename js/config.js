@@ -10,6 +10,8 @@ GAME.Config = {
 	height: 0,
 	thrust: 0.5,
 	gravity: 0.2,
+	heightDifference: 0.2,
+	difficultyLevel: 1,
 	maxRiseSpeed: 20,
 	maxFallSpeed: -20,
 	moveInterval: 12,
@@ -27,9 +29,10 @@ GAME.Config = {
 	birdActive: false,
 	
 	activate: {
-		birds: 200,
+		birds: 50,
 		planes: 400,
 		satellites: 600,
+		meteors: 50,
 		movement: 100,
 		secondBG: 300,
 		thirdBG: 500

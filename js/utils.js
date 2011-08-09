@@ -38,10 +38,30 @@ GAME.Utils.GameOver = function(what) {
 };
 
 GAME.Utils.NewItem = function(posX, posY, animation) {
-	var newItem = new Mibbu.spr('img/balloons.png', 30, 80, 0, 4);
-	newItem.position(posX, posY, 2).speed(1);
-	newItem.movement = 0;
-	newItem.zone(0,0,43,0);
-	newItem.animation(animation);
+	if(GAME.Config.height < GAME.Config.activate.meteors) { // balloons
+		var newItem = new Mibbu.spr('img/balloons.png', 30, 80, 0, 4);
+		newItem.position(posX, posY, 2).speed(1);
+		newItem.movement = 0;
+		newItem.zone(0,0,43,0);
+		newItem.animation(animation);
+	}
+	else {// meteors
+		//GAME.Config.difficultyLevel = 2; // random movement for higher diff levels, eg. lvl3 from 1 to 3
+		var newItem = new Mibbu.spr('img/meteor.png', 30, 37, 0, 0);
+		newItem.position(posX, posY, 2).speed(1);
+		//newItem.movement = GAME.Utils.PlusMinus*GAME.Config.difficultyLevel;
+		newItem.movement = 0;
+		newItem.zone(0,0,0,0);
+	}
 	return newItem;
+};
+
+GAME.Utils.LinkBackToMenu = function(id) {
+	document.getElementById(id).onclick = function() {
+		document.getElementById(id).style.zIndex = '5';
+	};
+};
+
+GAME.Utils.PlusMinus = function() {
+	return (~~(Math.random()*2)*2)-1;
 };

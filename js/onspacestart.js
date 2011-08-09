@@ -14,8 +14,10 @@ GAME.Init = function() {
 	GAME.keyboard = new GAME.Input();
 	var menu = document.getElementById('menu');
 	menu.getElementsByTagName('h1')[0].onclick = function() { GAME.Menu('game', preload); };
-	menu.getElementsByTagName('h2')[0].onclick = function() { GAME.Menu('instr'); };
+	menu.getElementsByTagName('h2')[0].onclick = function() { GAME.Menu('instructions'); };
 	menu.getElementsByTagName('h3')[0].onclick = function() { GAME.Menu('about'); };
+	GAME.Utils.LinkBackToMenu('howTo');
+	GAME.Utils.LinkBackToMenu('about');
 };
 
 GAME.Menu = function(id, preload) {
@@ -26,7 +28,7 @@ GAME.Menu = function(id, preload) {
 			GAME.Start(preload);
 			break;
 		}
-		case 'instr': {
+		case 'instructions': {
 			document.getElementById('howTo').style.zIndex = '20';
 			break;
 		}
@@ -48,10 +50,10 @@ GAME.Start = function(preload) {
 
 	// TODO: animatable version of the bird, both directions
 	// TODO: fix movement
-	bird.position(-60,-60);
-	bird.flyingSpeed = 7;
 	bird.width = 50;
 	bird.height = 34;
+	bird.flyingSpeed = 7;
+	bird.position(-bird.width,-bird.height, 4);
 	bird.hit(player, function() { GAME.Utils.GameOver('bird'); });
 	bird.zone(10,10,10,10);
 	
@@ -90,34 +92,24 @@ GAME.Start = function(preload) {
 
 		if(actHeight > GAME.Config.activate.birds && GAME.Config.birdActive == false) {
 			GAME.Config.birdActive = true;
-
-			var dir = (~~(Math.random()*2))+1;
-			bird.direction = (dir == 2) ? 'left' : 'right';
-
-			if(bird.direction == 'left') {
-				bird.position(1, 1);
+			bird.direction = GAME.Utils.PlusMinus();
+			
+			if(bird.direction == 1) {
+				bird.position(-bird.width, 1);
 			}
-			else { // right
+			else { // right, -1
 				bird.position(background.width, 1);
 			}
 		}
+
 		if(GAME.Config.birdActive) {
-			// TODO figure out different approach for the delay:
-			if(bird.position().x < -(~~(Math.random()*background.width)) || bird.position().x > background.width*(~~(Math.random()*background.width))) { // lol, random "delay"
+			if(bird.position().x + bird.width < 0 || bird.position().x - bird.width > background.width) {
 				GAME.Config.birdActive = false;
 			}
 			else {
-				if(bird.direction == 'left') {
-					//bird.position().x += bird.flyingSpeed;
-					bird.position(bird.position().x += bird.flyingSpeed, bird.position().y += actSpeed);
-				}
-				else { // right
-					//bird.position().x -= bird.flyingSpeed;
-					bird.position(bird.position().x -= bird.flyingSpeed, bird.position().y += actSpeed);
-				}
-				//bird.position(bird.position().x, bird.position().y += actSpeed);
+				bird.position(bird.position().x += bird.flyingSpeed*bird.direction, bird.position().y += actSpeed);
 			}
-			// TODO: add airplanes and then airplanes instead of birds after given height
+			// TODO: add airplanes and then satellites instead of birds after given height
 		}
 		
 		if(actHeight > 0) {
@@ -127,33 +119,28 @@ GAME.Start = function(preload) {
 			}
 			planet.position(planet.position().x, planet.position().y += actSpeed);
 			background.speed(actSpeed);
+			// TODO: if planet is not visible - remove it?
+			// TODO: lower height when the player is falling
 		}
 
 		if(actSpeed > 0) {
-			actHeight += 0.2;
+			actHeight += GAME.Config.heightDifference;
 		}
 		else if(actSpeed < 0) {
-			actHeight -= 0.2;
+			actHeight -= GAME.Config.heightDifference;
 		}
 
 		for(var i = 0; i < GAME.Config.itemCount; i++) {
-			var difficultyLevel = 0;
-			if(actHeight > GAME.Config.activate.movement) {
-				if(items[i].movement == 0) {
-					var diff = (~~(Math.random()*2))+1;
-					if(diff == 2) items[i].movement = 1;
-					else items[i].movement = -1;
-					console.log(items[i].movement);
-				}
-			}
-			items[i].position(items[i].position().x += items[i].movement, items[i].position().y += actSpeed);
-
 			// TODO: think about the situation when the user is falling and don't see the items...
 			if(items[i].position().y > background.height) {
 				var newItem = GAME.Utils.NewItem(~~(Math.random()*background.width), ~~(-(25*Math.random()+25)), i);
 				newItem.hit(player, function() { GAME.Utils.GameOver('item'); });
+				if(actHeight > GAME.Config.activate.movement) {
+					newItem.movement = GAME.Utils.PlusMinus()*GAME.Config.difficultyLevel;
+				}
 				items.splice(i,1,newItem);
 			}
+			items[i].position(items[i].position().x += items[i].movement, items[i].position().y += actSpeed);
 		}
 
 		if(actHeight > GAME.Config.activate.secondBG && GAME.Config.firstBG) {
@@ -166,7 +153,7 @@ GAME.Start = function(preload) {
 		if(actHeight > GAME.Config.activate.thirdBG && GAME.Config.secondBG) {
 			GAME.Config.secondBG = false;
 			GAME.Config.thirdBG = true;
-			background.img('img/bg_transition.png');
+			background.img('img/bg_stars.png');
 			background.y = GAME.Config.activate.thirdBG;
 		}
 
