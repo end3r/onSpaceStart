@@ -50,14 +50,14 @@ GAME.Input.prototype = {
 			case GAME.Config.input.PAUSE: {
 				if(GAME.Config.active) {
 					GAME.Config.active = false;
-					GAME.Utils.Alert('PAUSED','Press [spacebar] again to get back to the game.');
+					GAME.Utils.Alert(GAME.Config.msg.pausedTitle, GAME.Config.msg.pausedText);
 					Mibbu.off();
 				} else {
 					GAME.Config.active = true;
 					GAME.Utils.Alert();
 					Mibbu.on();
-				//	GAME.keyboard.held = {};
-				//	GAME.keyboard.pressed = {};
+					GAME.keyboard.held = {};
+					GAME.keyboard.pressed = {};
 				}
 				break;
 			}

@@ -6,6 +6,7 @@ GAME.Init = function() {
 	var preload = {};
 	preload.player = new Mibbu.spr('img/rocket.png', 70, 78, 2, 1),
 	preload.bird = new Mibbu.spr('img/bird.png', 50, 34, 0, 0),
+	//preload.plane = new Mibbu.spr('img/plane.png', 50, 34, 0, 0),
 	preload.planet = new Mibbu.spr('img/earth.png', 800, 144, 0, 0),
 	preload.background = new Mibbu.bg('img/bg_clouds.png', 6, 90, {x:0,y:-600}), // start from the bottom
 	preload.bg2 = new Mibbu.spr('img/bg_transition.png', 1, 1, 0, 0), // preload second background
@@ -44,6 +45,7 @@ GAME.Start = function(preload) {
 	window.focus();
 	var	player = preload.player,
 		bird = preload.bird,
+		plane = preload.plane,
 		planet = preload.planet,
 		background = preload.background,
 		item_height = 80;
@@ -56,7 +58,14 @@ GAME.Start = function(preload) {
 	bird.position(-bird.width,-bird.height, 4);
 	bird.hit(player, function() { GAME.Utils.GameOver('bird'); });
 	bird.zone(10,10,10,10);
-	
+
+//	plane.width = 50;
+//	plane.height = 34;
+//	plane.flyingSpeed = 7;
+//	plane.position(-bird.width,-bird.height, 4);
+//	plane.hit(player, function() { GAME.Utils.GameOver('plane'); });
+//	plane.zone(10,10,10,10);
+
 	background.speed(0).dir(90).on();
 	background.width = 800;
 	background.height = 400;
@@ -72,7 +81,7 @@ GAME.Start = function(preload) {
 
 	for(var i = 0, items = []; i < GAME.Config.itemCount; i++) {
 		items[i] = GAME.Utils.NewItem(Math.random()*background.width, (Math.random()*background.height)-(background.height+item_height), i, player);
-		items[i].hit(player, function() { GAME.Utils.GameOver('item'); });
+		items[i].hit(player, function() { GAME.Utils.GameOver('balloon'); });
 	}
 	GAME.Config.active = true;
 	Mibbu.on();
@@ -93,13 +102,8 @@ GAME.Start = function(preload) {
 		if(actHeight > GAME.Config.activate.birds && GAME.Config.birdActive == false) {
 			GAME.Config.birdActive = true;
 			bird.direction = GAME.Utils.PlusMinus();
-			
-			if(bird.direction == 1) {
-				bird.position(-bird.width, 1);
-			}
-			else { // right, -1
-				bird.position(background.width, 1);
-			}
+			var posX = (bird.direction+1) ? -bird.width : background.width;
+			bird.position(posX, 1);
 		}
 
 		if(GAME.Config.birdActive) {
@@ -133,8 +137,9 @@ GAME.Start = function(preload) {
 		for(var i = 0; i < GAME.Config.itemCount; i++) {
 			// TODO: think about the situation when the user is falling and don't see the items...
 			if(items[i].position().y > background.height) {
-				var newItem = GAME.Utils.NewItem(~~(Math.random()*background.width), ~~(-(25*Math.random()+25)), i);
-				newItem.hit(player, function() { GAME.Utils.GameOver('item'); });
+				var newItem = GAME.Utils.NewItem(~~(Math.random()*background.width), ~~(-(25*Math.random()+25)), i),
+					itemType = (GAME.Config.height < GAME.Config.activate.meteors) ? 'balloon' : 'meteor';
+				newItem.hit(player, function() { GAME.Utils.GameOver(itemType); });
 				if(actHeight > GAME.Config.activate.movement) {
 					newItem.movement = GAME.Utils.PlusMinus()*GAME.Config.difficultyLevel;
 				}

@@ -7,6 +7,7 @@ GAME.Config = {
 		PAUSE: 32,
 		START: 13
 	},
+
 	height: 0,
 	thrust: 0.5,
 	gravity: 0.2,
@@ -30,11 +31,25 @@ GAME.Config = {
 	
 	activate: {
 		birds: 50,
-		planes: 400,
-		satellites: 600,
+		planes: 100,
+		satellites: 150,
 		meteors: 50,
-		movement: 100,
-		secondBG: 300,
-		thirdBG: 500
+		movement: 50,
+		secondBG: 100,
+		thirdBG: 150
+	},
+	
+	msg: {
+		pausedTitle: 'PAUSED',
+		pausedText: 'Press [spacebar] again to get back to the game.',
+		congratulations: "Congratz, you've scored # metres!",
+		hitBalloon: "You hit the balloon!",
+		hitMeteor: "You hit that meteor!",
+		hitGround: "Oh noes, You crashed your spaceship!",
+		hitBird: "You killed that poor bird!",
+		hitPlane: "You crashed into the plane!",
+		hitSatellite: "You crashed into the satellite!",
+		gameOver: 'GAME OVER!',
+		tryAgain: 'Try again?'
 	}
 };
