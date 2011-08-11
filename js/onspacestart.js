@@ -5,8 +5,9 @@ GAME.Init = function() {
 	Mibbu.fps().canvasOff().init();
 	var preload = {};
 	preload.player = new Mibbu.spr('img/rocket.png', 70, 78, 2, 1),
-	preload.bird = new Mibbu.spr('img/bird.png', 43, 35, 2, 1),
-	//preload.plane = new Mibbu.spr('img/plane.png', 50, 34, 0, 0),
+	//preload.bird = new Mibbu.spr('img/bird.png', 43, 35, 2, 1),
+	//preload.plane = new Mibbu.spr('img/plane.png', 73, 48, 1, 1),
+	preload.bird = new Mibbu.spr('img/satellite.png', 116, 53, 0, 0),
 	preload.planet = new Mibbu.spr('img/earth.png', 800, 144, 0, 0),
 	preload.background = new Mibbu.bg('img/bg_clouds.png', 6, 90, {x:0,y:-600}), // start from the bottom
 	preload.bg2 = new Mibbu.spr('img/bg_transition.png', 1, 1, 0, 0), // preload second background
@@ -50,20 +51,24 @@ GAME.Start = function(preload) {
 		background = preload.background,
 		item_height = 80;
 
-	bird.width = 43;
-	bird.height = 35;
+//	bird.width = 43;
+//	bird.height = 35;
+//	bird.width = 73;
+//	bird.height = 48;
+	bird.width = 116;
+	bird.height = 53;
 	bird.flyingSpeed = 7;
 	bird.position(-bird.width,-bird.height, 4);
 	bird.hit(player, function() { GAME.Utils.GameOver('bird'); });
-	bird.zone(5,5,5,5);
+	bird.zone(15,15,15,15);
 	bird.speed(3);
 
-//	plane.width = 50;
-//	plane.height = 34;
+//	plane.width = 146;
+//	plane.height = 96;
 //	plane.flyingSpeed = 7;
-//	plane.position(-bird.width,-bird.height, 4);
+//	plane.position(-plane.width,-plane.height, 4);
 //	plane.hit(player, function() { GAME.Utils.GameOver('plane'); });
-//	plane.zone(10,10,10,10);
+//	plane.zone(5,5,5,5);
 
 	background.speed(0).dir(90).on();
 	background.width = 800;
@@ -138,7 +143,7 @@ GAME.Start = function(preload) {
 		for(var i = 0; i < GAME.Config.itemCount; i++) {
 			// TODO: think about the situation when the user is falling and don't see the items...
 			if(items[i].position().y > background.height) {
-				var newItem = GAME.Utils.NewItem(~~(Math.random()*background.width), ~~(-(25*Math.random()+25)), i),
+				var newItem = GAME.Utils.UpdateItem(items[i], ~~(Math.random()*background.width), ~~(-(25*Math.random()+25)), i),
 					itemType = (GAME.Config.height < GAME.Config.activate.meteors) ? 'balloon' : 'meteor';
 				newItem.hit(player, function() { GAME.Utils.GameOver(itemType); });
 				if(actHeight > GAME.Config.activate.movement) {

@@ -57,8 +57,28 @@ GAME.Utils.NewItem = function(posX, posY, animation) {
 	}
 	else {// meteors
 		//GAME.Config.difficultyLevel = 2; // random movement for higher difficulty levels, eg. lvl3 from 1 to 3
-		var newItem = new Mibbu.spr('img/meteor.png', 30, 37, 0, 0);
+		var newItem = new Mibbu.spr('img/meteor.png', 42, 41, 0, 0);
 		newItem.position(posX, posY, 2).speed(1);
+		newItem.movement = 0;
+		newItem.zone(0,0,0,0);
+	}
+	return newItem;
+};
+
+GAME.Utils.UpdateItem = function(newItem, posX, posY, animation) {
+	if(GAME.Config.height < GAME.Config.activate.meteors) { // balloons
+		//var newItem = new Mibbu.spr('img/balloons.png', 30, 80, 0, 4);
+		newItem.position(posX, posY, 2).speed(1);
+		//newItem.resize(30,80);
+		newItem.movement = 0;
+		newItem.zone(0,0,43,0);
+		newItem.animation(animation);
+	}
+	else {// meteors
+		//GAME.Config.difficultyLevel = 2; // random movement for higher difficulty levels, eg. lvl3 from 1 to 3
+		//var newItem = new Mibbu.spr('img/meteor.png', 42, 41, 0, 0);
+		newItem.position(posX, posY, 2).speed(1);
+		//newItem.resize(42,41);
 		newItem.movement = 0;
 		newItem.zone(0,0,0,0);
 	}

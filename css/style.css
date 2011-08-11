@@ -1,5 +1,5 @@
 * { margin:  0; padding: 0; }
-body { font: normal 16px Times New Roman; }
+body { font: normal 14px Times New Roman; background: #F4F3EF; }
 #container { width: 800px; margin: 0 auto; position: relative; }
 #container > div { position: absolute; top: 0; left: 0; width: 800px; height: 400px; }
 #container #game { z-index: 2; }
@@ -9,14 +9,14 @@ p#statbar #speed { display: inline-block; width: 35px; text-align: right; }
 
 #tmp { position: absolute; top: 0; right: 0; width: 200px; border: 1px solid red; display: none; }
 
-#container #menu { background: #E0D9CF; color: #666; text-align: center; text-shadow: 1px 1px 1px #fff; z-index: 10; }
+#container #menu { background: #E0D9CF url(../img/menu.jpg) no-repeat; color: #888; text-align: center; text-shadow: 1px 1px 1px #fff; z-index: 10; }
 #menu h1, #menu h2, #menu h3 { cursor: pointer; display: inline-block; padding: 5px 20px; border: 1px solid transparent; border-bottom-color: #39C6F4; }
-#menu h1:hover, #menu h2:hover, #menu h3:hover { border: 1px solid #39C6F4; }
-#menu span { color: #39C6F4; }
+/*#menu h1:hover, #menu h2:hover, #menu h3:hover { border: 1px solid #39C6F4; }*/
+#menu h1:hover span, #menu h2:hover span, #menu h3:hover span { color: #39C6F4; }
 #menu p { color: #888; }
-#menu h1 { margin-top: 70px; font-ize: 28px; }
-#menu h2 { margin-top: 30px; font-size: 24px; }
-#menu h3 { margin-top: 30px; font-size: 20px; }
+#menu h1 { margin-top: 170px; font-size: 20px; }
+#menu h2 { margin-top: 20px; font-size: 16px; }
+#menu h3 { margin-top: 20px; font-size: 14px; }
 
 #howTo { background: #E0D9CF; color: #666; text-align: center; text-shadow: 1px 1px 1px #fff; z-index: 9; }
 #howTo p { margin-top: 150px; }

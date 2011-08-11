@@ -33,7 +33,7 @@ GAME.Config = {
 		birds: 50,
 		planes: 100,
 		satellites: 150,
-		meteors: 50,
+		meteors: 100,
 		movement: 50,
 		secondBG: 100,
 		thirdBG: 150
@@ -41,7 +41,7 @@ GAME.Config = {
 	
 	msg: {
 		pausedTitle: 'PAUSED',
-		pausedText: 'Press [spacebar] again to get back to the game.',
+		pausedText: 'Press [spacebar] again to get back to the game. Or get back to <a href="">main menu</a>?',
 		congratulations: "Congratz, you've scored # metres!",
 		hitBalloon: "You hit the balloon!",
 		hitMeteor: "You hit that meteor!",
