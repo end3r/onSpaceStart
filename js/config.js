@@ -22,12 +22,13 @@ GAME.Config = {
 	posLimitBottom: 300,
 	itemCount: 5,
 	itemStart: 200,
+	bgHeight: 1000,
 
 	active: false,
 	firstBG: true,
 	secondBG: false,
 	thirdBG: false,
-	birdActive: false,
+	flyActive: false,
 	
 	activate: {
 		birds: 50,
@@ -40,16 +41,16 @@ GAME.Config = {
 	},
 	
 	msg: {
-		pausedTitle: 'PAUSED',
-		pausedText: 'Press [spacebar] again to get back to the game. Or get back to <a href="">main menu</a>?',
-		congratulations: "Congratz, you've scored # metres!",
-		hitBalloon: "You hit the balloon!",
-		hitMeteor: "You hit that meteor!",
-		hitGround: "Oh noes, You crashed your spaceship!",
-		hitBird: "You killed that poor bird!",
-		hitPlane: "You crashed into the plane!",
-		hitSatellite: "You crashed into the satellite!",
-		gameOver: 'GAME OVER!',
-		tryAgain: 'Try again?'
+		pausedTitle: "<h2>PAUSED</h2>",
+		pausedText: "<p>Press [spacebar] again to get back to the game.</p><p>Or get back to the <a href=''>main menu</a>?</p>",
+		congratulations: "<p>Congratulations, you've reached <span>#</span> metres!</p>",
+		hitBalloon: "<p>You hit the balloon!</p>",
+		hitMeteor: "<p>You hit that meteor!</p>",
+		hitGround: "<p>Oh no! You crashed your spaceship!</p>",
+		hitBird: "<p>You killed that poor bird!</p>",
+		hitPlane: "<p>You crashed into the plane!</p>",
+		hitSatellite: "<p>You crashed into the satellite!</p>",
+		gameOver: "<h1>GAME OVER!</h1>",
+		tryAgain: "<p><a href=''>Try again?</a></p>"
 	}
 };

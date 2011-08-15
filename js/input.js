@@ -63,7 +63,7 @@ GAME.Input.prototype = {
 			}
 			case GAME.Config.input.START: {
 				if(!GAME.Config.active)
-					document.getElementById('menu').getElementsByTagName('h1')[0].onclick();
+					GAME._tag('h1', GAME._id('menu')).onclick();
 				break;
 			}
 			default: { return; }
@@ -93,7 +93,6 @@ GAME.Input.prototype = {
 		return false;
 	},
 	frame: function(player,background) {
-		// TODO: reset held/pressed keys when lost focus OR pause game
 		if (GAME.Config.height) {
 			if ( (this.pressed.left || this.held.left)) {
 				player.position(player.position().x -= GAME.Config.moveInterval, player.position().y);
