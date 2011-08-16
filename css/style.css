@@ -17,14 +17,23 @@ p#statbar > span#stat-s { float: right; border-radius: 10px 0 0 0; }
 #menu h2 { margin-top: 15px; font-size: 16px; }
 #menu h3 { margin-top: 15px; font-size: 14px; }
 
-#howTo { background: #E0D9CF; color: #666; text-align: center; text-shadow: 1px 1px 1px #fff; z-index: 9; }
-#howTo p { margin-top: 150px; }
+#howTo { background: #E0D9CF url(../img/howtoplay.jpg) no-repeat; color: #666; z-index: 9; position: relative; }
+#howTo p { background: #fff; color: #0c7a8b; font-size: 14px; position: absolute; padding: 2px 4px 0px 4px; border: 1px solid #0c7a8b; border-radius: 5px; }
+#howTo p.meteor { top: 70px; left: 20px; }
+#howTo p.satellite { top: 40px; right: 240px; }
+#howTo p.balloon { top: 100px; left: 215px; }
+#howTo p.bird { top: 190px; left: 200px; }
+#howTo p.plane { top: 180px; right: 170px; }
+#howTo p.height { bottom: 55px; left: 40px; }
+#howTo p.speed { bottom: 50px; right: 50px; }
+#howTo p.rocket { bottom: 115px; left: 480px; }
 #about { background: #E0D9CF; color: #666; text-align: center; text-shadow: 1px 1px 1px #fff; z-index: 8; }
 #about p { margin-top: 0px; }
 #about p a { color: #888; text-decoration: none; font-weight: bold; }
 #about h2 { margin-top: 30px; }
 #about h3 { margin-top: 10px; }
-#howTo p span, #about p span { cursor: pointer; }
+#howTo span, #about span { display: inline-block; cursor: pointer; background: #aaa; color: #fff; text-transform: uppercase; font-size: 12px; padding: 15px; border: 1px solid #ccc; border-radius: 0px 10px 10px 0px; position: absolute; top: 150px; left: 0px; text-shadow: 1px 1px 1px #000; }
+#howTo span:hover, #about span:hover { background: #39C6F4; color: #fff; }
 
 #message { width: 800px; height: 400px; z-index: 5; position: relative; }
 #message .box { position: absolute; top: 100px; left: 200px; z-index: 4; width: 400px; height: 200px; background: #e2ded3; font: bold 12px Arial; }

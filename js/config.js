@@ -31,17 +31,17 @@ GAME.Config = {
 	flyActive: false,
 	
 	activate: {
-		birds: 1,
-		planes: 2,
-		satellites: 1,
+		birds: 10,
+		planes: 20,
+		satellites: 25,
 		meteors: -1,
-		movement: 3,
-		secondBG: 4
+		movement: 15,
+		secondBG: 40
 	},
 	
 	msg: {
 		pausedTitle: "<h2>PAUSED</h2>",
-		pausedText: "<p>Press [spacebar] again to get back to the game.</p><p>Or get back to the <a href=''>main menu</a>?</p>",
+		pausedText: "<p>Press spacebar again to get back to the game.</p><p>Or go to the <a href=''>main menu</a>?</p>",
 		congratulations: "<p>Congratulations, you've reached <span>#</span> metres!</p>",
 		hitBalloon: "<p>You hit the balloon!</p>",
 		hitMeteor: "<p>You hit that meteor!</p>",

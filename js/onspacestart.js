@@ -5,14 +5,14 @@ GAME._id = function(id) { return document.getElementById(id); };
 GAME._tag = function(tag, container) { return (container || document).getElementsByTagName(tag)[0]; };
 
 GAME.Init = function() {
-	Mibbu.fps().canvasOff().init();
+	Mibbu.canvasOff().init();
 	var preload = {};
 	preload.player = new Mibbu.spr('img/rocket.png', 70, 78, 2, 1),
 	preload.fly = new Mibbu.spr('img/bird.png', 43, 35, 2, 1),
 	preload.planet = new Mibbu.spr('img/earth.png', 800, 144, 0, 0),
-	preload.background = new Mibbu.bg('img/bg_clouds.png', 6, 90, {x:0,y:-600}), // start from the bottom
-	preload.bg2 = new Mibbu.spr('img/bg_transition.png', 1, 1, 0, 0), // preload second background
-	preload.bg3 = new Mibbu.spr('img/bg_stars.png', 1, 1, 0, 0); // preload third background
+	preload.background = new Mibbu.bg('img/bg_clouds.jpg', 6, 90, {x:0,y:-600}), // start from the bottom
+	preload.bg2 = new Mibbu.spr('img/bg_transition.jpg', 1, 1, 0, 0), // preload second background
+	preload.bg3 = new Mibbu.spr('img/bg_stars.jpg', 1, 1, 0, 0); // preload third background
 
 	GAME.keyboard = new GAME.Input();
 	var menu = GAME._id('menu');
@@ -106,7 +106,7 @@ GAME.Start = function(preload) {
 		}
 
 		if(!GAME.Config.flyActive) {
-			if(actBgHeight > activateSatellites && !switchedToSatellites && (GAME.Config.secondBG || GAME.Config.thirdBG) ) {
+			if(actBgHeight > activateSatellites && !switchedToSatellites && GAME.Config.thirdBG) {
 				switchedToSatellites = true;
 				fly.width = 116;
 				fly.height = 53;
@@ -115,7 +115,7 @@ GAME.Start = function(preload) {
 				fly.zone(15,15,15,15);
 				fly.speed(0);
 			}
-			else if(actBgHeight > activatePlanes && !switchedToPlanes) {
+			else if(actBgHeight > activatePlanes && !switchedToPlanes && GAME.Config.firstBG) {
 				switchedToPlanes = true;
 				fly.width = 73;
 				fly.height = 48;
@@ -125,7 +125,7 @@ GAME.Start = function(preload) {
 			}
 		}
 		
-		if(actBgHeight > activateBirds && !GAME.Config.flyActive) {
+		if( ( (actBgHeight > activateBirds && GAME.Config.firstBG) || (actBgHeight > activateSatellites && GAME.Config.thirdBG) ) && !GAME.Config.flyActive) {
 			GAME.Config.flyActive = true;
 			fly.direction = GAME.Utils.PlusMinus();
 			var posX = (fly.direction+1) ? -fly.width : background.width;
@@ -185,7 +185,7 @@ GAME.Start = function(preload) {
 		if(GAME.Config.firstBG && actBgHeight > activateSecondBg) {
 			GAME.Config.firstBG = false;
 			GAME.Config.secondBG = true;
-			background.img('img/bg_transition.png');
+			background.img('img/bg_transition.jpg');
 			actBgHeight = -800;
 			background.position(background.position().x, actBgHeight);
 		}
@@ -193,7 +193,7 @@ GAME.Start = function(preload) {
 		if(GAME.Config.secondBG && actBgHeight > 0) {
 			GAME.Config.secondBG = false;
 			GAME.Config.thirdBG = true;
-			background.img('img/bg_stars.png');
+			background.img('img/bg_stars.jpg');
 			background.position(background.position().x, 0);
 		}
 
