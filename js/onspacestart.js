@@ -9,8 +9,6 @@ GAME.Init = function() {
 	var preload = {};
 	preload.player = new Mibbu.spr('img/rocket.png', 70, 78, 2, 1),
 	preload.fly = new Mibbu.spr('img/bird.png', 43, 35, 2, 1),
-	//preload.plane = new Mibbu.spr('img/plane.png', 73, 48, 1, 1),
-	//preload.satellite = new Mibbu.spr('img/satellite.png', 116, 53, 0, 0),
 	preload.planet = new Mibbu.spr('img/earth.png', 800, 144, 0, 0),
 	preload.background = new Mibbu.bg('img/bg_clouds.png', 6, 90, {x:0,y:-600}), // start from the bottom
 	preload.bg2 = new Mibbu.spr('img/bg_transition.png', 1, 1, 0, 0), // preload second background
@@ -55,46 +53,12 @@ GAME.Start = function(preload) {
 
 	fly.width = 43;
 	fly.height = 35;
-	fly.flyingSpeed = 7;
+	fly.flyingSpeed = 6;
 	fly.position(-fly.width,-fly.height, 4);
 	fly.hit(player, function() { GAME.Utils.GameOver('bird'); });
-	fly.zone(15,15,15,15);
-	fly.speed(3);
+	fly.zone(5,5,5,5);
+	fly.speed(4);
 
-/*
-	bird.width = 43;
-	bird.height = 35;
-	bird.flyingSpeed = 7;
-	bird.position(-bird.width,-bird.height, 4);
-	bird.hit(player, function() { GAME.Utils.GameOver('bird'); });
-	bird.zone(15,15,15,15);
-	bird.speed(3);
-
-	plane.width = 146;
-	plane.height = 96;
-	plane.flyingSpeed = 7;
-	plane.position(-plane.width,-plane.height, 4);
-	plane.hit(player, function() { GAME.Utils.GameOver('plane'); });
-	plane.zone(5,5,5,5);
-	plane.speed(3);
-
-	satellite.width = 116;
-	satellite.height = 53;
-	satellite.flyingSpeed = 7;
-	satellite.position(-satellite.width,-satellite.height, 4);
-	satellite.hit(player, function() { GAME.Utils.GameOver('satellite'); });
-	satellite.zone(15,15,15,15);
-	satellite.speed(3);
-*/
-/*
-	var air = ['bird', 'plane', 'satellite'];
-	var actualAir = 0;
-	air[actualAir].flyingSpeed = 7;
-	air[actualAir].position(-air[actual_air].width, -air[actual_air].height, 4);
-	air[actualAir].hit(player, function() { GAME.Utils.GameOver(air[actual_air].name); });
-	air[actualAir].zone(10,10,10,10);
-	air[actualAir].speed(3);
-*/
 	background.speed(0).dir(90).on();
 	background.width = 800;
 	background.height = 400;
@@ -117,11 +81,22 @@ GAME.Start = function(preload) {
 	GAME.Config.active = true;
 	Mibbu.on();
 
+	var activateSatellites = GAME.Config.activate.satellites*GAME.Config.bgHeight,
+		activatePlanes = GAME.Config.activate.planes*GAME.Config.bgHeight,
+		activateBirds = GAME.Config.activate.birds*GAME.Config.bgHeight,
+		activateMeteors = GAME.Config.activate.meteors*GAME.Config.bgHeight,
+		activateMovement = GAME.Config.activate.movement*GAME.Config.bgHeight,
+		activateSecondBg = GAME.Config.activate.secondBG*GAME.Config.bgHeight-600,
+		switchedToSatellites = false,
+		switchedToPlanes = false,
+		switchedToBirds = true;
+	
 	var gameLoop = function(){
 		GAME.keyboard.frame(player,background);
 
 		var actSpeed = background.speed(),
-			actHeight = GAME.Config.height;
+			actHeight = GAME.Config.height,
+			actBgHeight = background.position().y;
 
 		GAME._id('height').innerHTML = parseFloat(actHeight).toFixed(1);
 		GAME._id('speed').innerHTML = parseFloat(actSpeed).toFixed(1);
@@ -130,7 +105,27 @@ GAME.Start = function(preload) {
 			GAME.Utils.GameOver('crash');
 		}
 
-		if(actHeight > GAME.Config.activate.birds && GAME.Config.flyActive == false) {
+		if(!GAME.Config.flyActive) {
+			if(actBgHeight > activateSatellites && !switchedToSatellites && (GAME.Config.secondBG || GAME.Config.thirdBG) ) {
+				switchedToSatellites = true;
+				fly.width = 116;
+				fly.height = 53;
+				fly.change('img/satellite.png', fly.width, fly.height, 0, 0);
+				fly.hit(player, function() { GAME.Utils.GameOver('satellite'); });
+				fly.zone(15,15,15,15);
+				fly.speed(0);
+			}
+			else if(actBgHeight > activatePlanes && !switchedToPlanes) {
+				switchedToPlanes = true;
+				fly.width = 73;
+				fly.height = 48;
+				fly.change('img/plane.png', fly.width, fly.height, 1, 1);
+				fly.hit(player, function() { GAME.Utils.GameOver('plane'); });
+				fly.zone(5,5,5,5);
+			}
+		}
+		
+		if(actBgHeight > activateBirds && !GAME.Config.flyActive) {
 			GAME.Config.flyActive = true;
 			fly.direction = GAME.Utils.PlusMinus();
 			var posX = (fly.direction+1) ? -fly.width : background.width;
@@ -166,7 +161,7 @@ GAME.Start = function(preload) {
 
 		for(var i = 0; i < GAME.Config.itemCount; i++) {
 			if(items[i].position().y > background.height) {
-				var newType = (GAME.Config.height < GAME.Config.activate.meteors) ? 'balloon' : 'meteor';
+				var newType = (actBgHeight < activateMeteors || !(GAME.Config.secondBG || GAME.Config.thirdBG) ) ? 'balloon' : 'meteor';
 				items[i].posX = ~~(Math.random()*background.width);
 				items[i].posY = ~~(-(25*Math.random()+25));
 
@@ -177,9 +172,9 @@ GAME.Start = function(preload) {
 					var newItem = GAME.Utils.NewItem(items[i].posX, items[i].posY, i, newType);
 					newItem.type = newType;
 				}
-				
+
 				newItem.hit(player, function() { GAME.Utils.GameOver(newItem.type); });
-				if(actHeight > GAME.Config.activate.movement) {
+				if(actBgHeight > activateMovement) {
 					newItem.movement = GAME.Utils.PlusMinus()*GAME.Config.difficultyLevel;
 				}
 				items.splice(i,1,newItem);
@@ -187,20 +182,18 @@ GAME.Start = function(preload) {
 			items[i].position(items[i].position().x += items[i].movement, items[i].position().y += actSpeed);
 		}
 
-		if(GAME.Config.firstBG && background.position().y > 3*GAME.Config.bgHeight-600) {
+		if(GAME.Config.firstBG && actBgHeight > activateSecondBg) {
 			GAME.Config.firstBG = false;
 			GAME.Config.secondBG = true;
 			background.img('img/bg_transition.png');
-			console.log('y: '+background.position().y+', height: '+actHeight);
-			background.position(background.position().x, -800);
-			console.log('y: '+background.position().y+', height: '+actHeight);
+			actBgHeight = -800;
+			background.position(background.position().x, actBgHeight);
 		}
 
-		if(GAME.Config.secondBG && background.position().y > 0) {
+		if(GAME.Config.secondBG && actBgHeight > 0) {
 			GAME.Config.secondBG = false;
 			GAME.Config.thirdBG = true;
 			background.img('img/bg_stars.png');
-			console.log('y: '+background.position().y+', height: '+actHeight);
 			background.position(background.position().x, 0);
 		}
 

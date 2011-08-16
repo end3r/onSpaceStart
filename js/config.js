@@ -31,13 +31,12 @@ GAME.Config = {
 	flyActive: false,
 	
 	activate: {
-		birds: 50,
-		planes: 100,
-		satellites: 150,
-		meteors: 100,
-		movement: 50,
-		secondBG: 100,
-		thirdBG: 150
+		birds: 1,
+		planes: 2,
+		satellites: 1,
+		meteors: -1,
+		movement: 3,
+		secondBG: 4
 	},
 	
 	msg: {
